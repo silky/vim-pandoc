@@ -1,10 +1,24 @@
 Plugin:      vim-pandoc, a vim plugin for writing in pandoc's 
              extended markdown
 
-Maintainers: David Sanson <dsanson@gmail.com>
-             Felipe Morales <hel.sheep@gmail.com>
+Maintainer: Noon Silk <noonsilk@gmail.com>
 
-URL:         https://github.com/vim-pandoc/vim-pandoc
+Forked from:
+    http://github.com/vim-pandoc/vim-pandoc/
+by:
+    David Sanson <dsanson@gmail.com>
+    Felipe Morales <hel.sheep@gmail.com>
+
+
+URL:         https://github.com/silky/vim-pandoc
+
+
+Version 2.1
+===========
+
+    - Deleted a bunch of unecessary code.
+    - Refactored syntax file to not be slow under Windows and fixed bugs.
+
 
 Version 2.0
 ===========

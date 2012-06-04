@@ -1,4 +1,4 @@
-*pandoc.txt* 	For Vim version 7.3 	Last change: 2011 Sep 05
+*pandoc.txt* 	For Vim version 7.3 	Last change: 2012 Jun 04
 
 [This document is formatted as a markdown file _and_ as a vim helpfile.
 If viewing from within vim, set ft=help to view it as a helpfile, and
@@ -7,41 +7,47 @@ set ft=pandoc to view it as a (pandoc) markdown file.]
 Vim Plugin for *pandoc*
 =======================
 
-This is a bundle for writing and editing documents in [pandoc][]'s
-[extended markdown][]. It provides
+This is a fork of the vim-pandoc package,
+<https://github.com/vim-pandoc/vim-pandoc/>. A bunch of functionality has been
+removed and the syntax highlighting has been cleaned up. It is a minimal version that
+should run a bit faster than the aforementioned version (which was cloned in June
+2012; there may be improvements at the time you are reading this). Almost all the
+comments and features below are from that version.
 
--   some settings to make vim a pleasant |pandoc-writing-environment|,
+This is a bundle for writing and editing documents in [pandoc]'s
+[extended markdown]. It provides
+
 -   |pandoc-syntax-highlighting|, with support for pandoc's extended
      markdown,
--   |pandoc-snippets| for use with [snipMate][],
+-   |pandoc-snippets| for use with [snipMate],
 -   |pandoc-section-folding|,
 -   |pandoc-citation-completion|,
--   some simple |pandoc-conversion-functions| and |pandoc-tidying-functions|,
+-   some simple |pandoc-tidying-functions|,
 -   a few |pandoc-localleader-mappings|
 
 Download and Install
 ====================
 
-For the latest version, see <https://github.com/vim-pandoc/vim-pandoc>.
+For the latest version, see <https://github.com/silky/vim-pandoc>.
 
 There are many different ways to manage and install vim plugins. Use
 your favorite method. If you don't have a favorite method, we recommend
-using [Pathogen][].
+using [Pathogen].
 
 Once you have Pathogen installed, clone this epository into your
 ``~/.vim/bundle` directory,
 
     cd ~/.vim/bundle
-    git clone git@github.com:vim-pandoc/vim-pandoc.git
+    git clone git@github.com:silky/vim-pandoc.git
 
 Or, if that seems too complicated, install Pathogen and then install
-[Vimmer][], a ruby gem for managing vim plugins, with
+[Vimmer], a ruby gem for managing vim plugins, with
 
     gem install vimmer
 
 Then run
 
-    vimmer install https://github.com/vim-pandoc/vim-pandoc.git
+    vimmer install https://github.com/silky/vim-pandoc.git
 
 Either way, this will install the bleeding edge development version
 of the plugin. If you want something more stable,
@@ -64,7 +70,7 @@ the github page and unzip it into \~/.vim/bundle.
 Filetype Detection and File Extensions
 ======================================
 
-If you have this plugin installed alongside [vim-markdown][], be aware
+If you have this plugin installed alongside [vim-markdown], be aware
 that both plugins attempt to claim the common markdown extensions for
 their own. We match the following extensions:
 
@@ -80,86 +86,12 @@ files, add
 
 to your `.vimrc`.
 
-*pandoc-writing-environment*
-===========================
-
-The bundle sets the following options, in an effort to provide a
-pleasant writing environment:
-
-    setlocal linebreak
-    setlocal breakat-=*
-
-|linebreak| tells vim to break lines at word boundaries. The |breakat|
-setting is to account for asterisks used for emphasis.
-
-    nnoremap <buffer> j gj
-    nnoremap <buffer> k gk
-    vnoremap <buffer> j gj
-    vnoremap <buffer> k gk
-
-These mappings allow use of j and k to move up and down in the middle of
-a soft-wrapped line.
-
-    setlocal display=lastline
-
-If you are using soft-wrapping, this will tell vim to go ahead and
-show part of a long line that runs off the bottom of the screen.
-
-    setlocal nojoinspaces
-
-|nojoinspaces| allows you to use SHIFT-J in normal mode to join the next
-line with the current line without adding extra unwanted spaces.
-
-    setlocal commentstring=<!--%s-->
-    setlocal comments=s:<!--,m:\ \ \ \ ,e:-->
-
-tells vim to use HTML style comments in your markdown files. For more, see
-|comments| and |commentstring|.
-
-*pandoc-hard-wrapping*
-----------------------
-
-By default, the bundle assumes that you will be using soft wrapping, and
-applies
-
-    setlocal formatoptions=1
-
-If you prefer hard wrapping, set g:pandoc_use_hard_wraps, i.e., put
-something like
-
-    let g:pandoc_use_hard_wraps = 1
-
-in your vimrc. When that is set, the bundle instead sets
-
-    setlocal formatoptions=tn
-
-If you also want autoformatting, set g:pandoc_auto_format:
-
-    let g:pandoc_auto_format = 1
-
-in your vimrc. For more information, see |formatoptions|. (Note that
-autoformatting can slow things down.)
-
 *pandoc-syntax-highlighting*
 ============================
 
-The syntax highlighting should be fairly accurate and complete. By
-default, the bundle tries to be smart, and only highlight implicit links
-if there is a matching link definition. This can be expensive on large
-files and slow things down. To disable it, set
-g:pandoc_no_empty_implicits:
-
-    let g:pandoc_no_empty_implicits = 1
-
-Due to the way they are handled, span elements (emphasis, bold, tt, subscript
-and superscript) can cause slowdowns. If you desire to disable highlighting of
-them altogether, set g:pandoc_no_spans:
-
-    let g:pandoc_no_spans = 1
-
-Note that this will also disable highlighting of embedded html, because
-otherwise stuff like `<code>` (which is unformatted) is detected as containing
-html that doesn't end.
+The syntax highlighting attempts to be quite minimal. Sections within tags will be
+processed by your local HTML syntax file, and parts in TeX sections will be processed
+by your local TeX style. Review the syntax file for more details.
 
 *pandoc-snippets*
 =================
@@ -184,7 +116,7 @@ g:pandoc_no_folding:
 
     let g:pandoc_no_folding = 1
 
-For more powerful folding and outline support, use [VOoM][]. If you are using
+For more powerful folding and outline support, use [VOoM]. If you are using
 VOoM, you can use `<localleader>o` to open it in markdown mode when editing a
 pandoc file.
 
@@ -266,7 +198,7 @@ Regular expressions work too:
 should suggest both '@leftow1990' and '@lewis1990', assuming those are
 both keys in your bibliography.
 
-The plugin also provides support for using this with [SuperTab][]. You
+The plugin also provides support for using this with [SuperTab]. You
 will want something like this in your vimrc:
 
     let g:SuperTabDefaultCompletionType = "context"
@@ -278,7 +210,7 @@ to complete the citation.
 --------------------
 
 By default, citation completion only matches entries by citekey. If you
-have [bibtool][] installed, and your bibliography is a bibtex file, and
+have [bibtool] installed, and your bibliography is a bibtex file, and
 you set
 
     let g:pandoc_use_bibtool = 1
@@ -292,30 +224,6 @@ might return both
     @armstrong1989    Armstrong, David M. - A Combinatorial Theory of Possibility
     @lewis1992        Lewis, David - Armstrong on Combinatorial Possibility
 
-*pandoc-citation-dictionary*
-----------------------------
-
-Omni-completion of citations is quick and powerful. But maybe you just
-want dictionary completion of citations? If you create a text file,
-
-    ~/.pandoc/citationkeys.dict
-
-that contains a list of citation keys, one per line, like so
-
-    @adams1967a
-    @adams1971
-    @adams1972a
-    @adams1974
-    @adams1977
-    @adams1986a
-
-we will add those keys to vim's |dictionary|, allowing for completion by
-typing part of a citekey, e.g.,
-
-    @adams19
-
-and then hitting CTRL-X CTRL-K (or via SuperTab).
-
 *pandoc-conversion-functions*
 =============================
 
@@ -328,77 +236,6 @@ since it is easy to do something like
 If there is a particular conversion that you do all the time with a
 particular set of options, you might want to define a leader mapping
 in your vimrc.
-
-*PandocRegisterExecutor*
-------------------------
-
-Better yet, you can define a command and a mapping using the
-PandocRegisterExecutor command. It tells vim-pandoc to register some
-local commands and mappings for a certain set of pandoc parameters. We
-call this an executor. The syntax of `PandocRegisterExecutor` is
-
-    :PandocRegisterExecutor NAME MAP TYPE COMMAND
-
-where NAME is the name of the Command, MAP is the mapping for it, TYPE
-is the extension of the created file, and COMMAND is a description of
-the command to create the document. For example:
-
-    :PandocRegisterExecutor PdcPdf <Leader>pdf pdf markdown2pdf %%
-
-should register a PdcPdf command that runs markdown2pdf on the current
-file, and a mapping to do the same, and a PdcPdfOpen command that also
-opens the created file, and a mapping to do so, identical to that for
-PdcPdf, but followed by a plus sign (that is, the mapping is
-`<Leader>pdf+`).
-
-Executors are registered before opening a file.
-
-Executors depend on the `pandoc_execute` function, which can be called
-like this:
-
-    :py pandoc_execute(COMMAND, TYPE, OPEN)
-
-where COMMAND is a string describing some pandoc arguments, TYPE is the
-extesion of the created file, and OPEN isn flag determining wether to
-open the created file or not. COMMAND can include some variables:
-
-1.  `%%` for the current filename
-2.  `%:r` for the current filename without the extension
-3.  `PANDOC#P_BIBS` for a sequence of --bibliography arguments for every
-    value in `b:pandoc_bibfiles`.
-4.  `PANDOC#BIBS` for a list of the values in `b:pandoc_bibfiles`.
-
-
-Those will be evaluated before executing the command, so the user can
-define executors that can access those variables. For example:
-
-    :PandocRegisterExecutor PdcPdfB <Leader>pdfb pdf markdown2pdf PANDOC#P_BIBS %%
-
-The value of command in PandocRegisterExecutor and pandoc\_execute can
-describe an \*NIX pipeline, like:
-
-    pandoc -t json %% | filter | pandoc -f json -t odt -o %:r.odt
-
-Default executors
------------------
-
-By default, vim-pandoc provides some handy executors:
-
--   *PandocPdf* (`<localleader>pdf`), which runs markdown2pdf, passing
-    the value of `g:pandoc_bibfile` as the argument of `--bibliography`.
--   *PandocHtml* (`<localleader>html`), which creates a standalone html.
--   *PandocOdt* (`<localleader>odt`), which creates an ODT file, passing
-    the value of `g:pandoc_bibfile` as the argument of `--bibliography`.
-
-with their opening variants.
-
-For the mappings to work, you must have |maplocalleader| defined in your
-vimrc, e.g.,
-
-    let maplocalleader = ","
-
-Then, for example, you can type something like `,pdf` and a PDF version
-of your current buffer will be displayed.
 
 *pandoc-tidying-functions*
 ==========================
@@ -455,7 +292,7 @@ first
     :set maplocalleader = ","
     :set ft=pandoc
 
-then move your cursor [somewhere in here][], and type `,gr`. Wasn't that
+then move your cursor [somewhere in here], and type `,gr`. Wasn't that
 fun?[^note] Now you probably want to go ahead and
 
     :set ft=help
@@ -486,28 +323,25 @@ jump back to where you were.
 Known Issues
 ============
 
-See the github [issues][] page for a current set of issues.
+See the github [issues] page for a current set of issues.
 
 Maintainers
 ===========
 
++    [Noon Silk](https://github.com/silky/)
 +    [Felipe Morales](https://github.com/fmoralesc/)
 +    [David Sanson](https://github.com/dsanson/) 
 
-Thanks also to [Wei Dai][] for bug fixes and improvements.
+Thanks also to [Wei Dai] for bug fixes and improvements.
 
 Borrowings
 ==========
 
-The syntax file ~~derives from Jeremy Schultz's [pdc.vim][] as
-githubbed by [wunki][]~~ has been completely rewritten from the
-ground up by Felipe Morales.
-
 The snippets file is a slight extension (and contraction) of the
 markdown.snippets file that is part of many of the [vim-markdown
-repositories on github][].
+repositories on github].
 
-Autocompletion was implemented by hacking away at [LaTeX Box][]'s
+Autocompletion was implemented by hacking away at [LaTeX Box]'s
 implementation of bibtex citation completion, even if the results don't
 look much like the original.
 
@@ -531,5 +365,5 @@ look much like the original.
   [bibtool]: http://www.gerd-neugebauer.de/software/TeX/BibTool/index.en.html
 
 
- vim:tw=78:ts=8:ft=help:norl: 
+ vim:tw=78:ts=8:ft=help:norl:
 
