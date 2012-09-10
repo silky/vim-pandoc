@@ -119,18 +119,6 @@ syn match pandocPCite /@\w*/
 syn match pandocPCite /@\w*\s\[.\{-}\]/ 
 
 
-" Subscripts:
-" -----------
-
-syn match pandocSubscript /\~\([^\~\\ ]\|\(\\ \)\)\+\~/ contains=@Spell 
-
-
-" Superscript:
-" ------------
-
-syn match pandocSuperscript /\^\([^\^\\ ]\|\(\\ \)\)\+\^/ contains=@Spell 
-
-
 " Strikeout:
 " ----------
 
